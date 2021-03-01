@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
 </head>
-<body>
-    <h1>Landing page</h1>
+<body style="text-align: left; line-height:0em;">
+    {% for post in posts %}
+        <h1>{{post.title}}</h1>
+        <h3>written by {{post.author}} </h3>
+        <p>date posted {{post.date_posted}}</p>
+        <p>{{post.content}}</p>
+        <hr>
+    {% endfor %}
 </body>
 </html>
+
+-->
+
+{% extends "layout.html" %}
+    {% block content %}
+        {% for post in posts %}
+            <article class="media content-section">
+                <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ post.author }}</a>
+                    <small class="text-muted">{{ post.date_posted }}</small>
+                </div>
+                <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+                <p class="article-content">{{ post.content }}</p>
+                </div>
+            </article>
+        
+        {% endfor %}
+    {% endblock content %}
+
+    
