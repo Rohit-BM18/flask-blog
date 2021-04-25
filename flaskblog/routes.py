@@ -1,10 +1,9 @@
 from flask import render_template, url_for, flash, redirect
-from flaskblog import app
+from flaskblog import app, bcrypt, db
 from flaskblog.forms import RegistrationForm, LoginForm
 from flaskblog.models import User, Post
 
 
- 
 
 blog_posts = [
     {
@@ -21,6 +20,17 @@ blog_posts = [
      'date_posted': '2nd March 2021'
     }
 ]
+
+"""
+REMINDER to define endpoints for additional features
+
+
+>> chat flask-socket.io
+>> video calls webrtc
+>> make a anon addressal portal
+>> also an endpoint for hosting podcasts
+
+"""
 
 @app.route("/")
 @app.route("/home") 
@@ -39,8 +49,12 @@ def contact_page():
 def registration():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f"Account created successfully for {form.username.data}! ", "success")
-        return redirect(url_for('func'))
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username = form.username.data, email = form.email.data, password = hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Your account has been created!. You can now log in", "success")
+        return redirect(url_for('login'))
     return render_template("register.html", title = "Register", form = form)
 
 
